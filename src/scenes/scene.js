@@ -6,12 +6,7 @@ export default class Scene {
     active = false;
     reference = null;
     constructor(canvasId) {
-        this.setupResize(canvasId);
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-        this.width = this.canvas.width;
-        this.height = this.canvas.height;
-        this.active = true;
+        this.activate(canvasId);
     }
     _resize() {
         this.canvas.width = window.innerWidth;
@@ -20,22 +15,21 @@ export default class Scene {
         this.height = this.canvas.height;
         this.render();
     }
-    setupResize(id) {
+
+    action() {
+    }
+
+    activate(id) {
         const canvas = document.getElementById(id);
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.reference = this._resize.bind(this),
+        this.reference()
         window.addEventListener(
             "resize",
             this.reference,
             false
         );
-    }
-
-    action() {
-    }
-
-    activate() {
         this.active = true;
         window.addEventListener(
             "resize",
