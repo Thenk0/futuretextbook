@@ -3,7 +3,6 @@ import Scene from "./src/scenes/scene";
 import Button from "./src/keyboard/button";
 
 const scene = new Scene("app");
-let counter = 0;
 let lastUpdate = 0;
 let now = performance.now();
 const btn = new Button("A", {
@@ -38,6 +37,5 @@ function render() {
     btn.render(scene.ctx);
     btn1.render(scene.ctx);
     requestAnimationFrame(render);
-    counter += 1;
 }
 render();

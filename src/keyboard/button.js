@@ -38,9 +38,16 @@ export default class Button {
             return 1;
         }
         let progress = this.animationCounter / this.pressAnimationDuration;
-        if (this.animationCounter == 0) progress = 0;
+        if (this.animationCounter === 0) progress = 0;
         progress = Math.min(progress, 1);
         const animation = InOutQuadBlend(progress);
+
+        /* Вот эта ужасная штука
+         . Формула параболы с офсетом по y равным 0.5
+         . 1.4 Подобрано случайно чтобы диапазон начинался от 0 до 1
+         . 0.7 смещение по x по той же причине
+        Ограничение не больше 1 чтобы кнопка не увеличивалась в размере при обратной анимации
+        */
         const scale = Math.min(1, Math.pow(animation * 1.4 - 0.7, 2) + 0.5);
         this.animationCounter += window.deltaTime;
         return scale;
@@ -55,6 +62,7 @@ export default class Button {
         const centerY = this.position.y - this.height * 0.5;
         const borderW = this.width + this.borderSize * 2;
         const borderH = this.height + this.borderSize * 2;
+        ctx.save();
         ctx.setTransform(
             scale,
             0,
