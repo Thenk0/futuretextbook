@@ -14,12 +14,15 @@ export default class Button {
     textSize = 36;
     pressAnimationDuration = 100;
     animating = false;
+    selected = false;
     animationCounter = 0;
-    constructor(letter, { color, borderColor, position }) {
+    selectedColor = "#FFFFFF";
+    constructor(letter, { color, borderColor, position, selectedColor }) {
         this.letter = letter;
         this.color = color;
         this.borderColor = borderColor;
         this.position = position;
+        this.selectedColor = selectedColor;
     }
 
     press() {
@@ -60,7 +63,6 @@ export default class Button {
         }
         const borderW = this.width + this.borderSize * 2;
         const borderH = this.height + this.borderSize * 2;
-        ctx.save();
         ctx.setTransform(
             scale,
             0,
@@ -69,14 +71,15 @@ export default class Button {
             this.position.x + this.width / 2,
             this.position.y + this.height / 2
         );
-        ctx.fillStyle = this.borderColor;
+        ctx.fillStyle = this.selected ? this.selectedColor : this.borderColor;
         ctx.fillRect(
             -this.width * 0.5 - this.borderSize,
             -this.height * 0.5 - this.borderSize,
             borderW,
             borderH
         );
-        ctx.fillStyle = this.color;
+
+        ctx.fillStyle = `${this.color}`;
         ctx.fillRect(
             -this.width * 0.5,
             -this.height * 0.5,
@@ -89,6 +92,5 @@ export default class Button {
         ctx.textBaseline = "middle";
         ctx.fillText(this.letter, 0, 0);
         ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.restore();
     }
 }

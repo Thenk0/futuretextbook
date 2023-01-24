@@ -1,3 +1,3 @@
 export function InOutQuadBlend(t) {
-    return t * t * (3.0 - 2.0 * t);
+    return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
 }

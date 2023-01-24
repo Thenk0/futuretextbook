@@ -5,7 +5,6 @@ export default class ButtonGroup {
         y: 0,
     };
     selected = false;
-    borderHighlightColor = "#FFFFFF";
     constructor(buttons, position) {
         this.buttons = buttons;
         this.position = position;
@@ -20,6 +19,7 @@ export default class ButtonGroup {
     select() {
         this.selected = true;
     }
+
     deselect() {
         this.selected = false;
     }
