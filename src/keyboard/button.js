@@ -58,8 +58,6 @@ export default class Button {
         if (this.animating) {
             scale = this._renderAnimation(ctx);
         }
-        const centerX = this.position.x - this.width * 0.5;
-        const centerY = this.position.y - this.height * 0.5;
         const borderW = this.width + this.borderSize * 2;
         const borderH = this.height + this.borderSize * 2;
         ctx.save();
@@ -68,20 +66,20 @@ export default class Button {
             0,
             0,
             scale,
-            this.position.x - this.width / 2,
-            this.position.y - this.height / 2
+            this.position.x + this.width / 2,
+            this.position.y + this.height / 2
         );
         ctx.fillStyle = this.borderColor;
         ctx.fillRect(
-            this.position.x - centerX - this.borderSize,
-            this.position.y - centerY - this.borderSize,
+            -this.width * 0.5 - this.borderSize,
+            -this.height * 0.5 - this.borderSize,
             borderW,
             borderH
         );
         ctx.fillStyle = this.color;
         ctx.fillRect(
-            this.position.x - centerX,
-            this.position.y - centerY,
+            -this.width * 0.5,
+            -this.height * 0.5,
             this.width,
             this.height
         );
@@ -89,11 +87,7 @@ export default class Button {
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(
-            this.letter,
-            this.position.x - centerX + this.width / 2,
-            this.position.y - centerY + this.height / 2
-        );
+        ctx.fillText(this.letter, 0, 0);
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.restore();
     }
