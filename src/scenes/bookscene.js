@@ -69,10 +69,18 @@ export default class BookScene extends Scene {
         }
         return needResize;
     }
-
+    resetPages() {
+        for (const page of this.book.pages) {
+            // Фикс инициализации
+            page.plane.material.map.needsUpdate = true;
+        }
+    }
     render(time) {
         if (!this.active) return;
         time *= 0.001;
+        // this.book.pages.forEach(page => {
+        //     page.plane.rotation.y = time * 2;
+        // });
         if (this.book.pages.length != this.controls.objects.length) {
             this.controls.objects = this.book.pages.map((page) => page.plane); 
         }
@@ -81,12 +89,8 @@ export default class BookScene extends Scene {
             this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
             this.camera.updateProjectionMatrix();
         }
-        if (this.book.pages.length > 0) {
-            for (const page of this.book.pages) {
-                // Фикс инициализации
-                page.plane.material.map.needsUpdate = true;
-            }
-        }
+    
+        setInterval(this.resetPages.bind(this), 1000);
         if (this.renderer == null) return;
         this.renderer.render(this.scene, this.camera);
     }
