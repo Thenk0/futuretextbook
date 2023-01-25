@@ -6,6 +6,7 @@ export default class Page {
         this.pageNumber = pageNumber;
         this.page = null;
         this.plane = new THREE.PlaneGeometry(1, 1);
+        this.scale = 1;
     }
 
     async loadPage() {
@@ -20,8 +21,7 @@ export default class Page {
             viewport: this.viewport,
         };
 
-        const task = await this.page.render(this.renderContext);
-        console.log(task);
+        await this.page.render(this.renderContext);
         const texture = new THREE.Texture(bitmap);
         const material = new THREE.MeshBasicMaterial({
             map: texture,

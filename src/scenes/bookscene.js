@@ -34,7 +34,6 @@ export default class BookScene extends Scene {
             const material = new THREE.MeshPhongMaterial({ color });
 
             const cube = new THREE.Mesh(geometry, material);
-            // this.scene.add(cube);
             cube.position.x = x;
 
             return cube;

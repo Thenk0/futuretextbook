@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { EventDispatcher } from "three";
+import { clamp } from "./utilities";
 let _plane = new THREE.Plane();
 let _raycaster = new THREE.Raycaster();
 let _mouse = new THREE.Vector2();
@@ -9,7 +10,7 @@ let _selected = null;
 let _hovered = null;
 let scope;
 let _started = false;
-
+let _focused = null;
 // Костыль, но я не могу разобраться по какой причине конструктор вызывается 2 раза.
 let eventBinded = false;
 export default class DragControls extends EventDispatcher {
@@ -28,13 +29,14 @@ export default class DragControls extends EventDispatcher {
 
         _raycaster.setFromCamera(_mouse, scope.camera);
         const intersects = _raycaster.intersectObjects(scope.objects);
-        if (intersects.length == 0) {
-            return;
-        }
         if (_started) {
+            _focused = _selected;
             _started = false;
             _selected = null;
             scope.dispatchEvent({ type: "dragend", object: _selected });
+            return;
+        }
+        if (intersects.length == 0) {
             return;
         }
         _started = true;
@@ -100,8 +102,11 @@ export default class DragControls extends EventDispatcher {
 
     onDocumentMouseCancel(event) {
         event.preventDefault();
-        
         // scope.domElement.style.cursor = "auto";
+    }
+
+    getFocused() {
+        return _focused;
     }
 
     onDocumentTouchStart(event) {
@@ -146,6 +151,20 @@ export default class DragControls extends EventDispatcher {
             scope.dispatchEvent({ type: "drag", object: _selected });
             return;
         }
+    }
+
+    onScroll(event) {
+        event.preventDefault();
+        if (!_focused) return;
+        const data = _focused.userData;
+        const size = parseInt(event.deltaY);
+        const sizeFactor = 0.001 * size;
+        if (size == 0) return;
+        const sizeFactorX = clamp(0.3, _focused.scale.x + sizeFactor, 3);
+        const sizeFactorY = clamp(0.3, _focused.scale.y + sizeFactor, 3);
+        _focused.scale.x = sizeFactorX;
+        _focused.scale.y = sizeFactorY;
+
     }
 
     onDocumentTouchEnd(event) {
@@ -197,6 +216,7 @@ export default class DragControls extends EventDispatcher {
             this.onDocumentTouchEnd,
             false
         );
+        this.domElement.addEventListener("wheel", this.onScroll, false);
     }
     deactivate() {
         this.eventBinded = false;
@@ -236,5 +256,6 @@ export default class DragControls extends EventDispatcher {
             this.onDocumentTouchEnd,
             false
         );
+        this.domElement.removeEventListener("wheel", this.onScroll, false);
     }
 }
