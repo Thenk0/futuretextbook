@@ -1,11 +1,11 @@
 /* global pdfjsLib */
 import "./style.css";
-import Scene from "./src/scenes/scene";
 import Button from "./src/keyboard/button";
-import Book from "./src/book/book";
+import BookScene from "./src/scenes/bookscene";
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.2.146/build/pdf.worker.min.js ";
-const scene = new Scene("app");
+const scene = new BookScene("app", "");
+// scene.activate();
 let lastUpdate = 0;
 let now = performance.now();
 const btn = new Button("A", {
@@ -34,16 +34,11 @@ window.addEventListener("keyup", function (event) {
         btn1.press();
     }
 });
-const book = new Book();
-book.loadBook();
-console.log(pdfjsLib);
-function render() {
+function render(time) {
     now = performance.now();
     window.deltaTime = now - lastUpdate;
     lastUpdate = now;
-    // scene.render();
-    // btn.render(scene.ctx);
-    // btn1.render(scene.ctx);
+    scene.render(time);
     requestAnimationFrame(render);
 }
-render();
+render(0);

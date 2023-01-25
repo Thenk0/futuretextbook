@@ -6,7 +6,9 @@ export default class Scene {
     active = false;
     reference = null;
     constructor(canvasId) {
-        this.activate(canvasId);
+        canvasId;
+        // this.activate(canvasId);
+        this.active = false;
     }
     _resize() {
         this.canvas.width = window.innerWidth;
