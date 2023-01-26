@@ -39,8 +39,31 @@ export default class DragControls extends EventDispatcher {
         if (intersects.length == 0) {
             return;
         }
+        _selected = intersects[0].object.parent;
+        if (intersects.length > 1 && _selected === _focused) {
+            _selected = null;
+            if (
+                intersects[0].object.userData.pageNumber !==
+                intersects[1].object.userData.pageNumber
+            )
+                return;
+            let index = 1;
+            if ("mediaType" in intersects[0].object.userData) {
+                index = 0;
+            }
+            const { pageNumber, mediaType, mediaIndex } =
+                intersects[index].object.userData;
+            return scope.dispatchEvent({
+                type: "mediastart",
+                object: {
+                    pageNumber,
+                    mediaType,
+                    mediaIndex,
+                },
+            });
+        }
         _started = true;
-        _selected = intersects[0].object;
+        _focused = _selected;
         if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
             _offset.copy(_intersection).sub(_selected.position);
         }
@@ -68,7 +91,6 @@ export default class DragControls extends EventDispatcher {
         }
 
         _raycaster.setFromCamera(_mouse, scope.camera);
-
         const intersects = _raycaster.intersectObjects(scope.objects);
         if (intersects.length == 0) {
             if (_hovered !== null) {
@@ -121,7 +143,7 @@ export default class DragControls extends EventDispatcher {
         _raycaster.setFromCamera(_mouse, scope.camera);
         const intersects = _raycaster.intersectObjects(scope.objects);
         if (intersects.length > 0) {
-            _selected = intersects[0].object;
+            _selected = intersects[0].object.parent;
             _plane.setFromNormalAndCoplanarPoint(
                 scope.camera.getWorldDirection(_plane.normal),
                 _selected.position
@@ -164,7 +186,6 @@ export default class DragControls extends EventDispatcher {
         const sizeFactorY = clamp(0.3, _focused.scale.y + sizeFactor, 3);
         _focused.scale.x = sizeFactorX;
         _focused.scale.y = sizeFactorY;
-
     }
 
     onDocumentTouchEnd(event) {

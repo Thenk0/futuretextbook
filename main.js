@@ -5,9 +5,8 @@ import BookScene from "./src/scenes/bookscene";
 pdfjsLib.GlobalWorkerOptions.workerSrc =
     "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.2.146/build/pdf.worker.min.js ";
 const scene = new BookScene("app", "");
-// scene.activate();
-let lastUpdate = 0;
-let now = performance.now();
+scene.activate();
+
 const btn = new Button("A", {
     color: "#FF0000",
     borderColor: "#FFF000",
@@ -34,6 +33,10 @@ window.addEventListener("keyup", function (event) {
         btn1.press();
     }
 });
+
+// Main loop
+let now = performance.now();
+let lastUpdate = 0;
 function render(time) {
     now = performance.now();
     window.deltaTime = now - lastUpdate;

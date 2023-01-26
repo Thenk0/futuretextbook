@@ -10,13 +10,13 @@ export default class BookScene extends Scene {
     cubes = [];
     constructor(canvasId, pdfUrl) {
         super(canvasId);
-        this.activate(canvasId);
+        this.canvasId = canvasId;
         this.pdfUrl = pdfUrl;
     }
 
-    activate(id) {
+    activate() {
         this.active = true;
-        const canvas = document.getElementById(id);
+        const canvas = document.getElementById(this.canvasId);
         this.renderer = new THREE.WebGLRenderer({ canvas });
         const fov = 75;
         const aspect = canvas.width / canvas.height;
@@ -54,8 +54,11 @@ export default class BookScene extends Scene {
             this.camera,
             this.renderer.domElement
         );
+
         this.book = new Book("/book.pdf");
         this.book.loadBook(this.scene);
+        this.controls.addEventListener("mediastart", this.book.playMedia.bind(this.book));
+        setInterval(this.resetPages.bind(this), 1000);
     }
 
     _resizeRendererToDisplaySize() {
@@ -77,19 +80,19 @@ export default class BookScene extends Scene {
     render(time) {
         if (!this.active) return;
         time *= 0.001;
+
         // this.book.pages.forEach(page => {
         //     page.plane.rotation.y = time * 2;
         // });
         if (this.book.pages.length != this.controls.objects.length) {
-            this.controls.objects = this.book.pages.map((page) => page.plane); 
+            this.controls.objects = this.book.pages.map((page) => page.group);
         }
         if (this._resizeRendererToDisplaySize()) {
             const canvas = this.renderer.domElement;
             this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
             this.camera.updateProjectionMatrix();
         }
-    
-        setInterval(this.resetPages.bind(this), 1000);
+
         if (this.renderer == null) return;
         this.renderer.render(this.scene, this.camera);
     }

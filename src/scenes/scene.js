@@ -7,7 +7,6 @@ export default class Scene {
     reference = null;
     constructor(canvasId) {
         canvasId;
-        // this.activate(canvasId);
         this.active = false;
     }
     _resize() {
