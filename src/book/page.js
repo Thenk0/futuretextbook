@@ -18,9 +18,10 @@ export default class Page {
     async loadPage() {
         this.page = await this.book.getPage(this.pageNumber);
         this.viewport = this.page.getViewport({ scale: 1.5 });
-        const bitmap = document.createElement("canvas");
-        bitmap.width = this.viewport.width;
-        bitmap.height = this.viewport.height;
+        const bitmap = new OffscreenCanvas(
+            this.viewport.width,
+            this.viewport.height
+        );
         const canvasContext = bitmap.getContext("2d");
         this.renderContext = {
             canvasContext,
@@ -47,9 +48,9 @@ export default class Page {
         this.group.add(this.plane);
     }
 
-    _initVideo(mediaObject) {
+    async _initVideo(mediaObject) {
         const video = new Video(mediaObject.url);
-        video.load();
+        await video.load();
         // array.push() Возвращает новую длину массива, получаем индекс медийного контента
         const index = this.media.push(video) - 1;
         const { x, y, w, h } = mediaObject.position;
@@ -57,12 +58,14 @@ export default class Page {
             this.plane.position.x + percentage(this.plane.position.x, x);
         const yLocal =
             this.plane.position.y + percentage(this.plane.position.y, y);
-        const wLocal = this.plane.scale.x + percentage(this.plane.scale.x, w);
-        const hLocal = this.plane.scale.y + percentage(this.plane.scale.y, h);
+        const wLocal = percentage(this.plane.geometry.parameters.width, w);
+        const hLocal = percentage(this.plane.geometry.parameters.height, h);
         const videoPlane = new THREE.PlaneGeometry(wLocal, hLocal);
+        const texture = new THREE.CanvasTexture(video.mediaCanvas);
         const material = new THREE.MeshBasicMaterial({
-            color: "#FF0000",
+            map: texture,
         });
+
         const mesh = new THREE.Mesh(videoPlane, material);
         mesh.position.x = xLocal;
         mesh.position.y = yLocal;
@@ -72,6 +75,7 @@ export default class Page {
             pageNumber: this.pageNumber,
         };
         mesh.renderOrder = this.pageNumber * -2 + 1;
+        mesh.material.map.needsUpdate = true;
         this.group.add(mesh);
     }
 

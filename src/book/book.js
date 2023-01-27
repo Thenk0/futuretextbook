@@ -45,10 +45,10 @@ export default class Book {
                         type: "video",
                         url: "/video.mp4",
                         position: {
-                            x: 0,
+                            x: -10,
                             y: 200,
-                            w: 200,
-                            h: 50,
+                            w: 80,
+                            h: 25.5,
                         },
                     },
                     {
@@ -57,8 +57,8 @@ export default class Book {
                         position: {
                             x: 0,
                             y: -200,
-                            w: 200,
-                            h: 50,
+                            w: 80,
+                            h: 30,
                         },
                     },
                 ],
@@ -75,6 +75,7 @@ export default class Book {
                             h: 50,
                         },
                     },
+
                     {
                         type: "panorama",
                         url: "/panorama.jpg",

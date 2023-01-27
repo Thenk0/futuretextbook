@@ -57,7 +57,10 @@ export default class BookScene extends Scene {
 
         this.book = new Book("/book.pdf");
         this.book.loadBook(this.scene);
-        this.controls.addEventListener("mediastart", this.book.playMedia.bind(this.book));
+        this.controls.addEventListener(
+            "mediastart",
+            this.book.playMedia.bind(this.book)
+        );
         setInterval(this.resetPages.bind(this), 1000);
     }
 
@@ -81,9 +84,12 @@ export default class BookScene extends Scene {
         if (!this.active) return;
         time *= 0.001;
 
-        // this.book.pages.forEach(page => {
-        //     page.plane.rotation.y = time * 2;
-        // });
+        this.book.pages.forEach((page) => {
+            page.group.children.forEach((child) => {
+                if (!("mediaType" in child.userData)) return;
+                child.material.map.needsUpdate = true;
+            });
+        });
         if (this.book.pages.length != this.controls.objects.length) {
             this.controls.objects = this.book.pages.map((page) => page.group);
         }

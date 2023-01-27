@@ -4,6 +4,7 @@ export default class Video {
     video = null;
     mediaCanvas = null;
     loaded = false;
+    playing = false;
     constructor(url) {
         this.url = url;
     }
@@ -12,24 +13,32 @@ export default class Video {
         this.loaded = state;
     }
 
-    load() {
-        this.mediaCanvas = document.querySelector("#media");
+    async load() {
+        this.mediaCanvas = new OffscreenCanvas(1280, 720);
         this.mediaCtx = this.mediaCanvas.getContext("2d");
         this.video = document.createElement("video");
         this.video.src = this.url;
         this.video.preload = "auto";
         this.video.load();
-        this.video.onerror = function (e) {
-            console.error(e);
-        };
-        this.video.addEventListener(
-            "loadeddata",
-            this.setLoaded.bind(this, true),
-            { once: true }
-        );
+
+        const that = this;
+        await new Promise((resolve, reject) => {
+            const startRender = () => {
+                this.render();
+                this.drawThumbnail();
+                resolve();
+            };
+            this.video.addEventListener("loadeddata", startRender.bind(that), {
+                once: true,
+            });
+            this.video.onerror = reject;
+        });
+        this.loaded = true;
         this.video.addEventListener(
             "play",
-            this._renderEvent.bind(this),
+            (() => {
+                this.loaded = true;
+            }).bind(this),
             false
         );
     }
@@ -44,17 +53,51 @@ export default class Video {
         await this.video.play();
     }
 
+    drawThumbnail() {
+        this.mediaCtx.drawImage(
+            this.video,
+            0,
+            0,
+            this.mediaCanvas.width,
+            this.mediaCanvas.height
+        );
+        this.mediaCtx.fillStyle = "#FFFFFF";
+        const centerX = this.mediaCanvas.width / 2;
+        const centerY = this.mediaCanvas.height / 2;
+        const triangleOffset = 70;
+        const triangleHeight = 125;
+        this.mediaCtx.beginPath();
+        this.mediaCtx.moveTo(centerX - triangleOffset, centerY);
+        this.mediaCtx.lineTo(
+            centerX - triangleOffset,
+            centerY + triangleHeight
+        );
+        this.mediaCtx.lineTo(centerX + triangleOffset, centerY);
+        this.mediaCtx.lineTo(
+            centerX - triangleOffset,
+            centerY - triangleHeight
+        );
+        this.mediaCtx.lineTo(centerX - triangleOffset, centerY);
+        this.mediaCtx.closePath();
+        this.mediaCtx.fill();
+        return this.mediaCanvas;
+    }
+
     pause() {
         this.video.pause();
     }
 
-    _renderEvent() {
+    render() {
+        this.renderLoop();
         requestAnimationFrame(this.render.bind(this));
     }
 
-    render() {
+    renderLoop() {
+        this.drawThumbnail();
         if (!this.loaded) return;
-        if (this.video.paused) return;
+        if (this.video.paused) {
+            return;
+        }
         if (this.video.ended) return;
         this.mediaCtx.drawImage(
             this.video,
@@ -63,6 +106,5 @@ export default class Video {
             this.mediaCanvas.width,
             this.mediaCanvas.height
         );
-        requestAnimationFrame(this.render.bind(this));
     }
 }
