@@ -11,12 +11,10 @@ body {
     height: 100%;
 }
 
-/* just to be sure these are full screen*/
-
 
 /* To remove the scrollbars */
 canvas {
-    width: 100%;
+    width: 100% !important;
     height: 100%;
     display: block;
 }
@@ -24,9 +22,5 @@ canvas {
 #media {
     position: absolute;
     pointer-events: none;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);  
-    width: 90%;
-    height: 90%;
+    top: 0;  
 }

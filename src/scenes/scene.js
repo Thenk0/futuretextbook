@@ -17,35 +17,22 @@ export default class Scene {
         this.render();
     }
 
-    action() {
-    }
+    action() {}
 
     activate(id) {
         const canvas = document.getElementById(id);
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
-        this.reference = this._resize.bind(this),
-        this.reference()
-        window.addEventListener(
-            "resize",
-            this.reference,
-            false
-        );
+        this.reference = this._resize.bind(this);
+        window.addEventListener("resize", this.reference, false);
+        window.addEventListener("resize", this.reference, false);
+        this.reference();
         this.active = true;
-        window.addEventListener(
-            "resize",
-            this.reference,
-            false
-        );
     }
 
     deactivate() {
         this.active = false;
-        window.removeEventListener(
-            "resize",
-            this.reference,
-            false
-        );
+        window.removeEventListener("resize", this.reference, false);
     }
 
     render() {

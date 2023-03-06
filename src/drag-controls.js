@@ -8,11 +8,10 @@ let _offset = new THREE.Vector3();
 let _intersection = new THREE.Vector3();
 let _selected = null;
 let _hovered = null;
-let scope;
+let scope = null;
 let _started = false;
 let _focused = null;
-// Костыль, но я не могу разобраться по какой причине конструктор вызывается 2 раза.
-let eventBinded = false;
+
 export default class DragControls extends EventDispatcher {
     constructor(objects, camera, domElement) {
         super();
@@ -45,8 +44,15 @@ export default class DragControls extends EventDispatcher {
             if (
                 intersects[0].object.userData.pageNumber !==
                 intersects[1].object.userData.pageNumber
-            )
+            ) {
+                _selected = intersects[0].object.parent;
+                _focused = _selected;
+                _started = true;
+                if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
+                    _offset.copy(_intersection).sub(_selected.position);
+                }
                 return;
+            }
             let index = 1;
             if ("mediaType" in intersects[0].object.userData) {
                 index = 0;
@@ -63,7 +69,18 @@ export default class DragControls extends EventDispatcher {
             });
         }
         _started = true;
+        if (_focused !== null) {
+            _focused.children.forEach(child => {
+                child.position.z = child.userData.zPosition
+                child.renderOrder = child.userData.renderOrder
+            });
+        }
         _focused = _selected;
+        console.log(_focused.children[0].renderOrder, _focused.children[0].position.z)
+        _focused.children.forEach(child => {
+            child.position.z = 0;
+            child.renderOrder = 1;
+        });
         if (_raycaster.ray.intersectPlane(_plane, _intersection)) {
             _offset.copy(_intersection).sub(_selected.position);
         }
@@ -178,9 +195,8 @@ export default class DragControls extends EventDispatcher {
     onScroll(event) {
         event.preventDefault();
         if (!_focused) return;
-        const data = _focused.userData;
         const size = parseInt(event.deltaY);
-        const sizeFactor = 0.001 * size;
+        const sizeFactor = 0.001 * -size;
         if (size == 0) return;
         const sizeFactorX = clamp(0.3, _focused.scale.x + sizeFactor, 3);
         const sizeFactorY = clamp(0.3, _focused.scale.y + sizeFactor, 3);
@@ -199,8 +215,6 @@ export default class DragControls extends EventDispatcher {
         scope.domElement.style.cursor = "auto";
     }
     activate() {
-        if (eventBinded) return;
-        eventBinded = true;
         if (!this.domElement) {
             console.log(
                 "Cannot activate the drag controls on a null DOM element"

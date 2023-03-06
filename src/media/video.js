@@ -5,6 +5,7 @@ export default class Video {
     mediaCanvas = null;
     loaded = false;
     playing = false;
+    
     constructor(url) {
         this.url = url;
     }
@@ -46,11 +47,18 @@ export default class Video {
     async play() {
         if (this.video === null)
             return console.error("tried to play video without loading");
+        if (this.isVideoPlaying()) {
+            this.pause()
+            return;
+        }
         while (!this.loaded) {
             await sleep(100);
         }
-        await sleep(1000);
         await this.video.play();
+    }
+
+    isVideoPlaying() {
+        return !!(this.video.currentTime > 0 && !this.video.paused && !this.video.ended && this.video.readyState > 2)
     }
 
     drawThumbnail() {
@@ -95,9 +103,7 @@ export default class Video {
     renderLoop() {
         this.drawThumbnail();
         if (!this.loaded) return;
-        if (this.video.paused) {
-            return;
-        }
+        if (this.video.paused) return;
         if (this.video.ended) return;
         this.mediaCtx.drawImage(
             this.video,

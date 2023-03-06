@@ -12,10 +12,6 @@ export default class BookScene extends Scene {
         super(canvasId);
         this.canvasId = canvasId;
         this.pdfUrl = pdfUrl;
-    }
-
-    activate() {
-        this.active = true;
         const canvas = document.getElementById(this.canvasId);
         this.renderer = new THREE.WebGLRenderer({ canvas });
         const fov = 75;
@@ -23,6 +19,8 @@ export default class BookScene extends Scene {
         const near = 0.001;
         const far = 10;
         this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+        this.camera.position.x = 1;
+        this.camera.position.y = 1;
         this.camera.position.z = 5;
         this.scene = new THREE.Scene();
         const color = 0xffffff;
@@ -30,38 +28,28 @@ export default class BookScene extends Scene {
         const light = new THREE.DirectionalLight(color, intensity);
         light.position.set(-1, 2, 4);
         this.scene.add(light);
-        const makeInstance = (geometry, color, x) => {
-            const material = new THREE.MeshPhongMaterial({ color });
-
-            const cube = new THREE.Mesh(geometry, material);
-            cube.position.x = x;
-
-            return cube;
-        };
-
-        const boxWidth = 1;
-        const boxHeight = 1;
-        const boxDepth = 1;
-        const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
-
-        this.cubes = [
-            makeInstance(geometry, 0x44aa88, 0),
-            makeInstance(geometry, 0x8844aa, -2),
-            makeInstance(geometry, 0xaa8844, 2),
-        ];
         this.controls = new DragControls(
             [],
             this.camera,
             this.renderer.domElement
         );
-
-        this.book = new Book("/book.pdf");
+        this.book = new Book("/pages.pdf");
         this.book.loadBook(this.scene);
         this.controls.addEventListener(
             "mediastart",
             this.book.playMedia.bind(this.book)
         );
-        setInterval(this.resetPages.bind(this), 1000);
+    }
+
+    activate() {
+        this.active = true;
+        this.render(0);
+        this.renderer.domElement.style.display = "block";
+    }
+
+    deactivate() {
+        this.active = false;
+        this.renderer.domElement.style.display = "none";
     }
 
     _resizeRendererToDisplaySize() {
@@ -83,10 +71,11 @@ export default class BookScene extends Scene {
     render(time) {
         if (!this.active) return;
         time *= 0.001;
-
+        time;
         this.book.pages.forEach((page) => {
             page.group.children.forEach((child) => {
                 if (!("mediaType" in child.userData)) return;
+                if (!child.userData.playing) return;
                 child.material.map.needsUpdate = true;
             });
         });

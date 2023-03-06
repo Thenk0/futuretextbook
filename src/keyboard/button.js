@@ -56,7 +56,7 @@ export default class Button {
         return scale;
     }
 
-    render(ctx) {
+    render(ctx) {   
         let scale = 1;
         if (this.animating) {
             scale = this._renderAnimation(ctx);

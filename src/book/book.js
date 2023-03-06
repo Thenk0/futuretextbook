@@ -8,23 +8,24 @@ export default class Book {
     }
 
     async loadBook(scene) {
-        const bookTask = pdfjsLib.getDocument("book.pdf");
+        // TODO: add memory save page loading
+        const bookTask = pdfjsLib.getDocument(this.bookUrl);
         const book = await bookTask.promise;
         this.bookInfo = await this.getBookInfo();
         console.log(`This document has ${book._pdfInfo.numPages} pages.`);
-        const page1 = new Page(book, 50);
-        const page2 = new Page(book, 60);
-        await page1.loadPage();
-        await page2.loadPage();
-        this.pages.push(page1);
-        this.pages.push(page2);
+        for (let i = 1; i <= book._pdfInfo.numPages; i++) {
+            const page = new Page(book, i);
+            await page.loadPage();
+            this.pages.push(page);
+        }
         this.pages.forEach((page) => {
             if (!(page.pageNumber in this.bookInfo)) return;
             page.mediaInfo = this.bookInfo[page.pageNumber];
             page.loadMedia();
         });
-        scene.add(page1.group);
-        scene.add(page2.group);
+        this.pages.forEach((page) => {
+            scene.add(page.group);
+        });
     }
 
     _getPage(number) {
@@ -39,56 +40,64 @@ export default class Book {
 
     async getBookInfo() {
         return {
-            60: {
+            5: {
                 media: [
                     {
                         type: "video",
-                        url: "/video.mp4",
-                        position: {
-                            x: -10,
-                            y: 200,
-                            w: 80,
-                            h: 25.5,
-                        },
-                    },
-                    {
-                        type: "video",
-                        url: "/мачин в кабинете.mp4",
+                        url: "/media/videos/ППБ-32В.mp4",
                         position: {
                             x: 0,
-                            y: -200,
+                            y: 125,
                             w: 80,
                             h: 30,
                         },
                     },
                 ],
             },
-            61: {
+            7: {
                 media: [
                     {
-                        type: "3d",
-                        url: "/obj.obj",
+                        type: "video",
+                        url: "/media/videos/панорама.mp4",
                         position: {
-                            x: 10,
-                            y: 100,
-                            w: 100,
-                            h: 50,
-                        },
-                    },
-
-                    {
-                        type: "panorama",
-                        url: "/panorama.jpg",
-                        panoramaType: "sphere",
-                        position: {
-                            x: 10,
-                            y: 300,
-                            w: 100,
-                            h: 50,
+                            x: 50,
+                            y: 125,
+                            w: 10,
+                            h: 10,
                         },
                     },
                 ],
             },
+            10: {
+                media: [
+                    {
+                        type: "3d",
+                        url: "/media/3d/obj.glb",
+                        preview: "/media/3d/3dpreview.png",
+                        position: {
+                            x: 0,
+                            y: 125,
+                            w: 80,
+                            h: 35,
+                        },
+                    },
+                ],
+            },
+            11: {
+                media: [
+                    {
+                        type: "panorama",
+                        url: "/media/panoramas/wash.jpg",
+                        panoramaType: "sphere",
+                        position: {
+                            x: 0,
+                            y: -100,
+                            w: 80,
+                            h: 30,
+                        },
+                    },
+                ]
+            }
         };
     }
 }

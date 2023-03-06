@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import Object3D from "../media/3dobject";
+import Panorama from "../media/panorama";
 import Video from "../media/video";
 import MediaTypes from "../MediaTypes";
 import { percentage } from "../utilities";
@@ -13,11 +15,12 @@ export default class Page {
         this.scale = 1;
         this.group = new THREE.Group();
         this.media = [];
+        this.mediaMeshes = [];
     }
 
     async loadPage() {
         this.page = await this.book.getPage(this.pageNumber);
-        this.viewport = this.page.getViewport({ scale: 1.5 });
+        this.viewport = this.page.getViewport({ scale: 1.25 });
         const bitmap = new OffscreenCanvas(
             this.viewport.width,
             this.viewport.height
@@ -33,6 +36,12 @@ export default class Page {
         const material = new THREE.MeshBasicMaterial({
             map: texture,
         });
+        const updateTexture = () => {
+            material.map.needsUpdate = true;
+        }
+
+        // Update texture after a second, fixes white screen
+        setTimeout(updateTexture, 1000);
         this.plane = new THREE.Mesh(
             new THREE.PlaneGeometry(bitmap.width / 200, bitmap.height / 200),
             material
@@ -41,18 +50,21 @@ export default class Page {
         this.plane.position.y = 1;
         this.plane.material.side = THREE.DoubleSide;
         this.plane.material.map.needsUpdate = true;
-        this.plane.renderOrder = this.pageNumber * -2;
         this.plane.userData = {
             pageNumber: this.pageNumber,
+            zPosition: parseFloat(((this.pageNumber + 1) * -1 * 0.005).toFixed(4)),
+            renderOrder: (this.pageNumber + 1) * -1,
         };
+        this.plane.renderOrder = this.plane.userData.renderOrder;
+        this.plane.position.z = this.plane.userData.zPosition;
+        console.log(this.plane.position.z, this.plane.renderOrder)
+        this.group.renderOrder = -this.pageNumber;
         this.group.add(this.plane);
     }
 
-    async _initVideo(mediaObject) {
-        const video = new Video(mediaObject.url);
-        await video.load();
+    _addMedia(mediaObject, media) {
         // array.push() Возвращает новую длину массива, получаем индекс медийного контента
-        const index = this.media.push(video) - 1;
+        const index = this.media.push(media) - 1;
         const { x, y, w, h } = mediaObject.position;
         const xLocal =
             this.plane.position.x + percentage(this.plane.position.x, x);
@@ -61,38 +73,59 @@ export default class Page {
         const wLocal = percentage(this.plane.geometry.parameters.width, w);
         const hLocal = percentage(this.plane.geometry.parameters.height, h);
         const videoPlane = new THREE.PlaneGeometry(wLocal, hLocal);
-        const texture = new THREE.CanvasTexture(video.mediaCanvas);
+        const texture = new THREE.CanvasTexture(media.mediaCanvas);
         const material = new THREE.MeshBasicMaterial({
             map: texture,
         });
 
         const mesh = new THREE.Mesh(videoPlane, material);
+        this.mediaMeshes.push(mesh);
         mesh.position.x = xLocal;
         mesh.position.y = yLocal;
         mesh.userData = {
             mediaIndex: index,
             mediaType: MediaTypes.video,
             pageNumber: this.pageNumber,
+            playing: false,
+            zPosition: parseFloat(((this.pageNumber + 1) * -1 * 0.005).toFixed(4)),
+            renderOrder: (this.pageNumber + 1) * -1
         };
-        mesh.renderOrder = this.pageNumber * -2 + 1;
+        
+        mesh.position.z = mesh.userData.zPosition;
+        mesh.renderOrder = mesh.userData.renderOrder;
         mesh.material.map.needsUpdate = true;
         this.group.add(mesh);
+    }
+    async _initVideo(mediaObject) {
+        const video = new Video(mediaObject.url);
+        await video.load();
+        this._addMedia(mediaObject, video);
+
+    }
+
+    async _init3D(mediaObject) { 
+        const obj3d = new Object3D(mediaObject.url, mediaObject.preview);
+        await obj3d.load();
+        this._addMedia(mediaObject, obj3d);
+    }
+
+    async _initPanorama(mediaObject) {
+        const panorama = new Panorama(mediaObject.url);
+        await panorama.load();
+        this._addMedia(mediaObject, panorama);
     }
 
     playMedia(mediaIndex) {
         this.media[mediaIndex].play();
+        this.mediaMeshes[mediaIndex].userData.playing = true;
     }
-
-    _init3D(mediaObject) {}
-
-    _initPanorama(mediaObject) {}
 
     loadMedia() {
         if (this.mediaInfo === null) return;
         for (const media of this.mediaInfo.media) {
             if (media.type == MediaTypes.video) this._initVideo(media);
             if (media.type == MediaTypes.panorama) this._initPanorama(media);
-            if (media.type == MediaTypes.ThreeD) this._init3D(media);
+            if (media.type == MediaTypes.threeD) this._init3D(media);
         }
     }
 }
