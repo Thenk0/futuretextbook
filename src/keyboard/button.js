@@ -28,6 +28,7 @@ export default class Button {
     press() {
         this.stopAnimation();
         this.animating = true;
+        return this.letter;
     }
 
     stopAnimation() {

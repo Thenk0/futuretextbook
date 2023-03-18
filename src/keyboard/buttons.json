@@ -1,0 +1,60 @@
+{
+    "groups": [
+        {
+            "borderColor": "#fff000",
+            "color": "#ff0000",
+            "selectedBorderColor": "#fff120",
+            "selectedColor": "#ff1200",
+            "buttons": [
+                {
+                    "letter": "Й",
+                    "position": {
+                        "x": 15,
+                        "y": 25
+                    },
+                    "orientation": "left"
+                },
+                {
+                    "letter": "Ц",
+                    "position": {
+                        "x": 45,
+                        "y": 25
+                    },
+                    "orientation": "right"
+                },
+                {
+                    "letter": "Ф",
+                    "position": {
+                        "x": 15,
+                        "y": 55
+                    },
+                    "orientation": "left"
+                },
+                {
+                    "letter": "Ы",
+                    "position": {
+                        "x": 45,
+                        "y": 55
+                    },
+                    "orientation": "right"
+                },
+                {
+                    "letter": "Я",
+                    "position": {
+                        "x": 15,
+                        "y": 85
+                    },
+                    "orientation": "left"
+                },
+                {
+                    "letter": "Ч",
+                    "position": {
+                        "x": 45,
+                        "y": 85
+                    },
+                    "orientation": "right"
+                }
+            ]
+        }
+    ]
+}
