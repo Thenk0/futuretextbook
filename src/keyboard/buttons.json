@@ -1,58 +1,234 @@
 {
     "groups": [
         {
-            "borderColor": "#fff000",
+            "borderColor": "#8b0000",
             "color": "#ff0000",
-            "selectedBorderColor": "#fff120",
-            "selectedColor": "#ff1200",
+            "selectedColor": "#ffffff",
+            "orientation": "left",
+            "position": {
+                "x": 445,
+                "y": 625
+            },
             "buttons": [
                 {
-                    "letter": "Й",
-                    "position": {
-                        "x": 15,
-                        "y": 25
-                    },
-                    "orientation": "left"
+                    "row": 1,
+                    "column": 2,
+                    "letter": "Й"
                 },
                 {
-                    "letter": "Ц",
-                    "position": {
-                        "x": 45,
-                        "y": 25
-                    },
-                    "orientation": "right"
+                    "row": 2,
+                    "column": 2,
+                    "letter": "Ф"
                 },
                 {
-                    "letter": "Ф",
-                    "position": {
-                        "x": 15,
-                        "y": 55
-                    },
-                    "orientation": "left"
+                    "row": 3,
+                    "column": 2,
+                    "letter": "Я"
+                }
+            ]
+        },
+        {
+            "borderColor": "#ff9900",
+            "color": "#e7ba25",
+            "selectedColor": "#ffffff",
+            "orientation": "left",
+            "position": {
+                "x": 595,
+                "y": 625
+            },
+            "buttons": [
+                {
+                    "row": 1,
+                    "column": 1,
+                    "letter": "Ц"
                 },
                 {
-                    "letter": "Ы",
-                    "position": {
-                        "x": 45,
-                        "y": 55
-                    },
-                    "orientation": "right"
+                    "row": 2,
+                    "column": 1,
+                    "letter": "Ы"
                 },
                 {
-                    "letter": "Я",
-                    "position": {
-                        "x": 15,
-                        "y": 85
-                    },
-                    "orientation": "left"
+                    "row": 3,
+                    "column": 1,
+                    "letter": "Ч"
                 },
                 {
-                    "letter": "Ч",
-                    "position": {
-                        "x": 45,
-                        "y": 85
-                    },
-                    "orientation": "right"
+                    "row": 1,
+                    "column": 2,
+                    "letter": "У"
+                },
+                {
+                    "row": 2,
+                    "column": 2,
+                    "letter": "В"
+                },
+                {
+                    "row": 3,
+                    "column": 2,
+                    "letter": "С"
+                }
+            ]
+        },
+        {
+            "borderColor": "#040481",
+            "color": "#1a1ac2",
+            "selectedColor": "#ffffff",
+            "orientation": "left",
+            "position": {
+                "x": 745,
+                "y": 625
+            },
+            "buttons": [
+                {
+                    "row": 1,
+                    "column": 1,
+                    "letter": "К"
+                },
+                {
+                    "row": 2,
+                    "column": 1,
+                    "letter": "А"
+                },
+                {
+                    "row": 3,
+                    "column": 1,
+                    "letter": "М"
+                },
+                {
+                    "row": 1,
+                    "column": 2,
+                    "letter": "Е"
+                },
+                {
+                    "row": 2,
+                    "column": 2,
+                    "letter": "П"
+                },
+                {
+                    "row": 3,
+                    "column": 2,
+                    "letter": "И"
+                }
+            ]
+        },
+        {
+            "borderColor": "#040481",
+            "color": "#1a1ac2",
+            "selectedColor": "#ffffff",
+            "orientation": "left",
+            "position": {
+                "x": 945,
+                "y": 625
+            },
+            "buttons": [
+                {
+                    "row": 1,
+                    "column": 1,
+                    "letter": "Н"
+                },
+                {
+                    "row": 2,
+                    "column": 1,
+                    "letter": "Р"
+                },
+                {
+                    "row": 3,
+                    "column": 1,
+                    "letter": "Т"
+                },
+                {
+                    "row": 1,
+                    "column": 2,
+                    "letter": "Г"
+                },
+                {
+                    "row": 2,
+                    "column": 2,
+                    "letter": "О"
+                },
+                {
+                    "row": 3,
+                    "column": 2,
+                    "letter": "Ь"
+                }
+            ]
+        },
+        {
+            "borderColor": "#0057a8",
+            "color": "#069fc5",
+            "selectedColor": "#ffffff",
+            "orientation": "left",
+            "position": {
+                "x": 1095,
+                "y": 625
+            },
+            "buttons": [
+                {
+                    "row": 1,
+                    "column": 1,
+                    "letter": "Ш"
+                },
+                {
+                    "row": 2,
+                    "column": 1,
+                    "letter": "Л"
+                },
+                {
+                    "row": 3,
+                    "column": 1,
+                    "letter": "Б"
+                },
+                {
+                    "row": 1,
+                    "column": 2,
+                    "letter": "Щ"
+                },
+                {
+                    "row": 2,
+                    "column": 2,
+                    "letter": "Д"
+                },
+                {
+                    "row": 3,
+                    "column": 2,
+                    "letter": "Ю"
+                }
+            ]
+        },
+        {
+            "borderColor": "#a7019e",
+            "color": "#df03d4",
+            "selectedColor": "#ffffff",
+            "orientation": "left",
+            "position": {
+                "x": 1245,
+                "y": 625
+            },
+            "buttons": [
+                {
+                    "row": 1,
+                    "column": 1,
+                    "letter": "З"
+                },
+                {
+                    "row": 2,
+                    "column": 1,
+                    "letter": "Ж"
+                },
+                {
+                    "row": 3,
+                    "column": 1,
+                    "letter": "Ъ"
+                },
+                {
+                    "row": 1,
+                    "column": 2,
+                    "letter": "Х"
+                },
+                {
+                    "row": 2,
+                    "column": 2,
+                    "letter": "Э"
                 }
             ]
         }

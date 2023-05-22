@@ -1,19 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Учебник будущего</title>
-        <link
-            href="/css/pdf_viewer.min.css"
-            rel="stylesheet"
-        />
-    </head>
-    <body oncontextmenu="return false;">
-        <canvas id="media"></canvas>
-        <canvas id="app"></canvas>
-        <script src="/js/pdf.min.js"></script>
-        <script src="/js/pdf.worker.min.js"></script>
-        <script type="module" src="/main.js"></script>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Учебник будущего</title>
+    <link href="/css/pdf_viewer.min.css" rel="stylesheet" />
+  </head>
+  <body oncontextmenu="return false;">
+    <div id="keyboard-block" style="display: none">
+      <div id="keyboard-buttons">
+        <div class="keyboard-button" page="1"></div>
+        <div class="keyboard-button" page="2"></div>
+        <div class="keyboard-button" page="3"></div>
+        <div class="keyboard-button" page="4"></div>
+        <div class="keyboard-button" page="5"></div>
+        <div class="keyboard-button" page="6"></div>
+      </div>
+      <canvas width="1920" height="1080" id="keyboard"></canvas>
+      <div id="keyboard-input"></div>
+
+      <div id="keyboard-buttons-fake">
+        <div class="keyboard-button-fake">1. Вариант выбора для книги</div>
+        <div class="keyboard-button-fake">2. Вариант выбора для книги</div>
+        <div class="keyboard-button-fake">3. Вариант выбора для книги</div>
+        <div class="keyboard-button-fake">4. Вариант выбора для книги</div>
+        <div class="keyboard-button-fake">5. Вариант выбора для книги</div>
+        <div class="keyboard-button-fake">6. Вариант выбора для книги</div>
+      </div>
+    </div>
+    <div id="search-button">
+      <img src="/search.png" alt="" />
+    </div>
+    <canvas id="media" style="display: none"></canvas>
+    <canvas id="app"></canvas>
+    <script src="/js/pdf.min.js"></script>
+    <script src="/js/pdf.worker.min.js"></script>
+    <script type="module" src="/main.js"></script>
+  </body>
 </html>

@@ -51,6 +51,7 @@ export default class Object3D {
     async play() {
         this.mediaScene.load3d(this.url);
         this.mediaScene.activate();
+        window.bookScene.deactivate();
     }
 
     drawThumbnail() {

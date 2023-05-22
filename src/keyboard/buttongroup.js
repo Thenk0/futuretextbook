@@ -20,6 +20,7 @@ export default class ButtonGroup {
         if (index > this.buttons.length) return;
         const letter = this.buttons[index].press();
         this.deselect();
+        console.log(letter);
         return letter;
     }
 

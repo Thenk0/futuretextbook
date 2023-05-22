@@ -5,9 +5,10 @@ export default class Book {
     constructor(url) {
         this.bookUrl = url;
         this.pages = [];
+        this.outline = [];
     }
 
-    async loadBook(scene) {
+    async loadBook(scene, startPage) {
         // TODO: add memory save page loading
         const bookTask = pdfjsLib.getDocument(this.bookUrl);
         const book = await bookTask.promise;
@@ -15,7 +16,7 @@ export default class Book {
         console.log(`This document has ${book._pdfInfo.numPages} pages.`);
         for (let i = 1; i <= book._pdfInfo.numPages; i++) {
             const page = new Page(book, i);
-            await page.loadPage();
+            await page.loadPage(i >= startPage);
             this.pages.push(page);
         }
         this.pages.forEach((page) => {
@@ -26,6 +27,24 @@ export default class Book {
         this.pages.forEach((page) => {
             scene.add(page.group);
         });
+        const outline = await book.getOutline();
+        if (!outline) return;
+
+        for (const single of outline) {
+            await this.getOutline(book, single, 0);
+        }
+        console.log(this.outline);
+    }
+
+    async getOutline(book, single, depth) {
+        let ref = single.dest;
+        if (typeof dest === "string") ref = await book.getDestination(single.dest);
+        const id = await book.getPageIndex(ref[0]);
+        this.outline.push({ title: single.title, pageNumber: parseInt(id) + 1, depth });
+        if (single.items.length === 0) return;
+        for (const s of single.items) {
+            await this.getOutline(book, s, depth + 1);
+        }
     }
 
     _getPage(number) {
@@ -50,20 +69,6 @@ export default class Book {
                             y: 125,
                             w: 80,
                             h: 30,
-                        },
-                    },
-                ],
-            },
-            7: {
-                media: [
-                    {
-                        type: "video",
-                        url: "/media/videos/панорама.mp4",
-                        position: {
-                            x: 50,
-                            y: 125,
-                            w: 10,
-                            h: 10,
                         },
                     },
                 ],

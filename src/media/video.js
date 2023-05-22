@@ -5,7 +5,7 @@ export default class Video {
     mediaCanvas = null;
     loaded = false;
     playing = false;
-    
+
     constructor(url) {
         this.url = url;
     }
@@ -45,12 +45,8 @@ export default class Video {
     }
 
     async play() {
-        if (this.video === null)
-            return console.error("tried to play video without loading");
-        if (this.isVideoPlaying()) {
-            this.pause()
-            return;
-        }
+        if (this.video === null) return console.error("tried to play video without loading");
+        if (this.isVideoPlaying()) return this.pause()
         while (!this.loaded) {
             await sleep(100);
         }

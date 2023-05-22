@@ -28,6 +28,11 @@ export default class MediaScene extends Scene {
         light.position.set(0, 0, -500);
         this.scene.add(light);
         this.loader3d = new GLTFLoader();
+        this.i = 0;
+        this.pI = 0;
+        this.redMaterial = new THREE.MeshBasicMaterial({ color: 0xFF0000 })
+        this.redMaterial.depthTest = false;
+        this.redMaterial.depthWrite = false;
     }
     _resize() {
         this.canvas.width = window.innerWidth;
@@ -39,13 +44,33 @@ export default class MediaScene extends Scene {
 
     async load3d(objUrl) {
         if (this.mesh) this.scene.remove(this.mesh);
-        this.loader3d.load(objUrl, (function (gltf) {
+        await this.loader3d.load(objUrl, (function (gltf) {
             this.mesh = gltf.scene;
+            console.log(this.mesh.children[0].material)
             this.scene.add(this.mesh);
+            console.log(this.mesh.children)
         }).bind(this));
         this.controls.target.set(0, 2, 0);
         this.camera.position.set(0, 0, 300);
         this.controls.update();
+        const f = (function () {
+            if (typeof this.mesh === "undefined") return;
+            const children = this.mesh.children;
+            if (this.i >= children.length - 1) {
+                this.i = 0;
+            }
+            if (this.oldMaterial) {
+                children[this.pI].material = this.oldMaterial;
+                children[this.pI].renderOrder = 0;
+            }
+            this.oldMaterial = children[this.i].material
+            children[this.i].material = this.redMaterial;
+            children[this.i].renderOrder = 999;
+            this.pI = this.i;
+            this.i++;
+
+        }).bind(this);
+        setInterval(f, 1000);
     }
 
     async loadImage(imgurl) {
@@ -69,6 +94,7 @@ export default class MediaScene extends Scene {
     action() { }
 
     activate() {
+        console.log("activated");
         this.canvas.style.pointerEvents = "auto";
         this.active = true;
         this.render();

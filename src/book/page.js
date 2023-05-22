@@ -18,7 +18,7 @@ export default class Page {
         this.mediaMeshes = [];
     }
 
-    async loadPage() {
+    async loadPage(isStarted = true) {
         this.page = await this.book.getPage(this.pageNumber);
         this.viewport = this.page.getViewport({ scale: 1.25 });
         const bitmap = new OffscreenCanvas(
@@ -48,6 +48,12 @@ export default class Page {
         );
         this.plane.position.x = 1;
         this.plane.position.y = 1;
+        if (!isStarted) {
+            this.plane.position.x = -4;
+            this.plane.position.y = 3;
+            this.plane.scale.x = 0.5;
+            this.plane.scale.y = 0.5;
+        }
         this.plane.material.side = THREE.DoubleSide;
         this.plane.material.map.needsUpdate = true;
         this.plane.userData = {
@@ -67,11 +73,11 @@ export default class Page {
         const index = this.media.push(media) - 1;
         const { x, y, w, h } = mediaObject.position;
         const xLocal =
-            this.plane.position.x + percentage(this.plane.position.x, x);
+            this.plane.position.x + (percentage(this.plane.position.x * this.plane.scale.x, x * this.plane.scale.x)) * this.plane.scale.x;
         const yLocal =
-            this.plane.position.y + percentage(this.plane.position.y, y);
-        const wLocal = percentage(this.plane.geometry.parameters.width, w);
-        const hLocal = percentage(this.plane.geometry.parameters.height, h);
+            this.plane.position.y + (percentage(this.plane.position.y * this.plane.scale.y, y * this.plane.scale.y)) * this.plane.scale.y;
+        const wLocal = percentage(this.plane.geometry.parameters.width * this.plane.scale.x, w);
+        const hLocal = percentage(this.plane.geometry.parameters.height * this.plane.scale.y, h);
         const videoPlane = new THREE.PlaneGeometry(wLocal, hLocal);
         const texture = new THREE.CanvasTexture(media.mediaCanvas);
         const material = new THREE.MeshBasicMaterial({
@@ -90,7 +96,7 @@ export default class Page {
             zPosition: parseFloat(((this.pageNumber + 1) * -1 * 0.005).toFixed(4)),
             renderOrder: (this.pageNumber + 1) * -1
         };
-        
+
         mesh.position.z = mesh.userData.zPosition;
         mesh.renderOrder = mesh.userData.renderOrder;
         mesh.material.map.needsUpdate = true;
@@ -103,7 +109,7 @@ export default class Page {
 
     }
 
-    async _init3D(mediaObject) { 
+    async _init3D(mediaObject) {
         const obj3d = new Object3D(mediaObject.url, mediaObject.preview);
         await obj3d.load();
         this._addMedia(mediaObject, obj3d);

@@ -8,7 +8,8 @@ export default class BookScene extends Scene {
     renderer = null;
     scene = null;
     cubes = [];
-    constructor(canvasId, pdfUrl) {
+    constructor(canvasId, pdfUrl, page = 0) {
+        console.log(page);
         super(canvasId);
         this.canvasId = canvasId;
         this.pdfUrl = pdfUrl;
@@ -34,7 +35,7 @@ export default class BookScene extends Scene {
             this.renderer.domElement
         );
         this.book = new Book("/pages.pdf");
-        this.book.loadBook(this.scene);
+        this.book.loadBook(this.scene, page);
         this.controls.addEventListener(
             "mediastart",
             this.book.playMedia.bind(this.book)
@@ -44,12 +45,17 @@ export default class BookScene extends Scene {
     activate() {
         this.active = true;
         this.render(0);
+        document.getElementById("search-button").style.display = "block";
         this.renderer.domElement.style.display = "block";
+        this.renderer.domElement.style.pointerEvents = "all";
+        window.keyboardScene.setOutline(this.book.outline)
     }
 
     deactivate() {
         this.active = false;
         this.renderer.domElement.style.display = "none";
+        document.getElementById("search-button").style.display = "none";
+        this.renderer.domElement.style.pointerEvents = "none";
     }
 
     _resizeRendererToDisplaySize() {

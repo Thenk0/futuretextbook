@@ -23,6 +23,7 @@ export default class Panorama {
     async play() {
         this.mediaScene.loadImage(this.url);
         this.mediaScene.activate();
+        window.bookScene.deactivate();
     }
 
     drawThumbnail() {

@@ -8,8 +8,8 @@ export default class Button {
         x: 0,
         y: 0,
     };
-    width = 50;
-    height = 50;
+    
+    height = 60;
     borderSize = 3;
     textSize = 36;
     pressAnimationDuration = 100;
@@ -17,12 +17,13 @@ export default class Button {
     selected = false;
     animationCounter = 0;
     selectedColor = "#FFFFFF";
-    constructor(letter, { color, borderColor, position, selectedColor }) {
+    constructor(letter, { color, borderColor, position, selectedColor, width }) {
         this.letter = letter;
         this.color = color;
         this.borderColor = borderColor;
         this.position = position;
         this.selectedColor = selectedColor;
+        this.width = width;
     }
 
     press() {
