@@ -17,6 +17,9 @@ export default class Button {
     selected = false;
     animationCounter = 0;
     selectedColor = "#FFFFFF";
+    scale = 1
+    isConfirmed = false;
+
     constructor(letter, { color, borderColor, position, selectedColor, width }) {
         this.letter = letter;
         this.color = color;
@@ -46,30 +49,30 @@ export default class Button {
         if (this.animationCounter === 0) progress = 0;
         progress = Math.min(progress, 1);
         const animation = InOutQuadBlend(progress);
-
+        
         /* Вот эта ужасная штука
          . Формула параболы с офсетом по y равным 0.5
          . 1.4 Подобрано случайно чтобы диапазон начинался от 0 до 1
          . 0.7 смещение по x по той же причине
         Ограничение не больше 1 чтобы кнопка не увеличивалась в размере при обратной анимации
         */
-        const scale = Math.min(1, Math.pow(animation * 1.4 - 0.7, 2) + 0.5);
+        this.scale = Math.min(10, Math.pow(animation * 1.4 - 0.7, 2) + 0.5);
         this.animationCounter += window.deltaTime;
-        return scale;
+        return this.scale;
     }
 
     render(ctx) {   
-        let scale = 1;
+
         if (this.animating) {
-            scale = this._renderAnimation(ctx);
+            this.scale = this._renderAnimation(ctx);
         }
         const borderW = this.width + this.borderSize * 2;
         const borderH = this.height + this.borderSize * 2;
         ctx.setTransform(
-            scale,
+            this.scale,
             0,
             0,
-            scale,
+            this.scale,
             this.position.x + this.width / 2,
             this.position.y + this.height / 2
         );

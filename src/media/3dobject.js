@@ -17,7 +17,7 @@ export default class Object3D {
         // this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
         // this.camera.position.z = 400;
         // this.scene = new THREE.Scene();
-        // const color = 0xffffff;
+        // const color = 0xffffff; 
         // const intensity = 1;
         // let light = new THREE.DirectionalLight(color, intensity);
         // light.position.set(-1, 2, 4);
@@ -47,7 +47,7 @@ export default class Object3D {
         //     this.scene.add(mesh);
         // }).bind(this));
     }
-
+    
     async play() {
         this.mediaScene.load3d(this.url);
         this.mediaScene.activate();

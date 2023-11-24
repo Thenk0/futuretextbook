@@ -8,7 +8,7 @@ export default class Book {
         this.outline = [];
     }
 
-    async loadBook(scene, startPage) {
+    async loadBook(scene) {
         // TODO: add memory save page loading
         const bookTask = pdfjsLib.getDocument(this.bookUrl);
         const book = await bookTask.promise;
@@ -16,24 +16,21 @@ export default class Book {
         console.log(`This document has ${book._pdfInfo.numPages} pages.`);
         for (let i = 1; i <= book._pdfInfo.numPages; i++) {
             const page = new Page(book, i);
-            await page.loadPage(i >= startPage);
+            await page.loadPage();
+            if ((page.pageNumber in this.bookInfo)) {
+                page.mediaInfo = this.bookInfo[page.pageNumber];
+                await page.loadMedia();
+            }
             this.pages.push(page);
-        }
-        this.pages.forEach((page) => {
-            if (!(page.pageNumber in this.bookInfo)) return;
-            page.mediaInfo = this.bookInfo[page.pageNumber];
-            page.loadMedia();
-        });
-        this.pages.forEach((page) => {
             scene.add(page.group);
-        });
+        }
         const outline = await book.getOutline();
         if (!outline) return;
 
         for (const single of outline) {
             await this.getOutline(book, single, 0);
         }
-        console.log(this.outline);
+
     }
 
     async getOutline(book, single, depth) {
@@ -48,7 +45,9 @@ export default class Book {
     }
 
     _getPage(number) {
-        return this.pages.find((page) => page.pageNumber == number);
+        return this.pages.find((page) => {
+            return page.pageNumber == number;
+        });
     }
 
     playMedia(event) {
@@ -58,7 +57,23 @@ export default class Book {
     }
 
     async getBookInfo() {
+        if (this.bookUrl != "/pages.pdf") return {};
         return {
+            3: {
+                media: [
+                    {
+                        type: "frame",
+                        url: "/media/frame/map1.png",
+                        preview: "/media/frame/map1.png",
+                        position: {
+                            x: 0,
+                            y: 50,
+                            w: 80,
+                            h: 35
+                        }
+                    }
+                ]
+            },
             5: {
                 media: [
                     {
@@ -76,7 +91,7 @@ export default class Book {
             10: {
                 media: [
                     {
-                        type: "3d",
+                        type: "annotated3d",
                         url: "/media/3d/obj.glb",
                         preview: "/media/3d/3dpreview.png",
                         position: {
@@ -87,6 +102,7 @@ export default class Book {
                         },
                     },
                 ],
+
             },
             11: {
                 media: [
@@ -102,7 +118,23 @@ export default class Book {
                         },
                     },
                 ]
-            }
+            },
+            13: {
+                media: [
+                    {
+                        type: "3d",
+                        url: "/media/3d/rl5m.glb",
+                        preview: "/media/3d/rl5mpreview.png",
+                        position: {
+                            x: 0,
+                            y: 118,
+                            w: 80,
+                            h: 35,
+                        },
+                    },
+                ]
+            },
+
         };
     }
 }

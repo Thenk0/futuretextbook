@@ -1,4 +1,3 @@
-
 export default class Panorama {
     mediaScene = window.mediaScene;
     mediaCanvas = null;
@@ -21,7 +20,7 @@ export default class Panorama {
     }
 
     async play() {
-        this.mediaScene.loadImage(this.url);
+        this.mediaScene.loadImage(this.url, false);
         this.mediaScene.activate();
         window.bookScene.deactivate();
     }

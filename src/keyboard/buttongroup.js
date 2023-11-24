@@ -10,6 +10,11 @@ export default class ButtonGroup {
         this.position = position;
     }
 
+
+    getButton(index){
+        return this.buttons[index]
+    }
+
     render(ctx) {
         this.buttons.forEach((button) => {
             button.render(ctx);
@@ -18,12 +23,13 @@ export default class ButtonGroup {
 
     pressButton(index) {
         if (index > this.buttons.length) return;
-        const letter = this.buttons[index].press();
-        this.deselect();
-        console.log(letter);
-        return letter;
+        const letter = this.buttons[index];
+        return letter.press();
     }
 
+    /*
+    mark group as selected
+    */
     select() {
         this.selected = true;
         for (const button of this.buttons) {
@@ -35,6 +41,7 @@ export default class ButtonGroup {
         this.selected = false;
         for (const button of this.buttons) {
             button.selected = false;
+            button.scale = 1;
         }
     }
 }

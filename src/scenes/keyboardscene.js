@@ -32,9 +32,11 @@ export default class KeyboardScene extends Scene {
         this.keyboard.registerEvents();
         window.addEventListener("wheel", this.scrollEvent);
         this.observer.observe(this.keyboard.inputField, { characterData: true, childList: true, attributes: true })
+
         if (this.keyboard.inputField.innerText.length > 0) {
             return this.search(this.keyboard.inputField.innerText);
         }
+        
         this.setOutline(window.bookScene.book.outline);
     }
 
@@ -99,14 +101,13 @@ export default class KeyboardScene extends Scene {
     }
 
     _onChange(mutationList) {
-
         for (const mutation of mutationList) {
             this.search(mutation.target.innerText);
             break;
         }
     }
 
-    _scrollButtons(event) {
+    _scrollButtons(event) {   
         const delta = Math.sign(event.deltaY);
         this.guiButtons.scroll(0, this.guiButtons.scrollTop + delta * this.scrollSpeed);
         this.guiButtonsFake.scroll(0, this.guiButtonsFake.scrollTop + delta * this.scrollSpeed / 4.32);

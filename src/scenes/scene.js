@@ -6,7 +6,7 @@ export default class Scene {
     active = false;
     reference = null;
     constructor(canvasId) {
-        canvasId;
+        this.canvasId = canvasId;
         this.active = false;
     }
     _resize() {

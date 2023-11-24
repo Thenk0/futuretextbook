@@ -10,27 +10,106 @@
     <div id="keyboard-block" style="display: none">
       <div id="keyboard-buttons">
         <div class="keyboard-button" page="1"></div>
-        <div class="keyboard-button" page="2"></div>
-        <div class="keyboard-button" page="3"></div>
-        <div class="keyboard-button" page="4"></div>
-        <div class="keyboard-button" page="5"></div>
-        <div class="keyboard-button" page="6"></div>
       </div>
       <canvas width="1920" height="1080" id="keyboard"></canvas>
       <div id="keyboard-input"></div>
-
       <div id="keyboard-buttons-fake">
         <div class="keyboard-button-fake">1. Вариант выбора для книги</div>
-        <div class="keyboard-button-fake">2. Вариант выбора для книги</div>
-        <div class="keyboard-button-fake">3. Вариант выбора для книги</div>
-        <div class="keyboard-button-fake">4. Вариант выбора для книги</div>
-        <div class="keyboard-button-fake">5. Вариант выбора для книги</div>
-        <div class="keyboard-button-fake">6. Вариант выбора для книги</div>
       </div>
     </div>
-    <div id="search-button">
+    <div id="search-button" style="display: none">
       <img src="/search.png" alt="" />
     </div>
+    <div id="media-buttons" style="display: none">
+      <!-- <div class="media-button" modelindex="0">1. Объект</div> -->
+      <!-- <div class="media-button" modelindex="1">2. Объект</div> -->
+      <!-- <div class="media-button" modelindex="2">3. Объект</div> -->
+      <!-- <div class="media-button" modelindex="3">4. Объект</div> -->
+    </div>
+    <div id="frame-block">
+      <div id="video-wrapper">
+        <img src="/media/videos/drone.gif" alt="map" class="video-img">
+      </div>
+      <div class="frame__menu" style="display: none">
+        <ul id="frame-elements">
+        </ul>
+      </div>
+    </div>
+    <div id="library-block">
+      <canvas id="library-canvas" style="display: block"></canvas>
+      <div class="bookshelf-block">
+        <div class="book-large-title"></div>
+        <div class="bookshelf-wrapper">
+          <img class="bookshelf" src="/shelf.png" alt="полка" />
+          <div id="library-books">
+            <div class="book-row">
+              <div
+                class="book"
+                data-book-title="Технические средства
+                вещевой службы"
+              >
+                <img
+                  class="book-cover"
+                  data-book-url="/pages.pdf"
+                  src="/cover.jpg"
+                  alt=""
+                />
+              </div>
+              <div
+                class="book"
+                data-book-title="Технический паспорт изделия: Горелка на дизельном топливе"
+              >
+                <img class="book-cover" src="/forscover.jpg" data-book-url="/forsbook.pdf" alt="" />
+              </div>
+              <!-- <div class="book">
+                <img class="book-cover" src="/cover.jpg" alt="" />
+              </div>
+              <div class="book">
+                <img class="book-cover" src="/cover.jpg" alt="" />
+              </div> -->
+            </div>
+            <!-- <div class="book-row">
+              <div class="book">
+                <img class="book-cover" src="/cover.jpg" alt="" />
+              </div>
+              <div class="book">
+                <img class="book-cover" src="/cover.jpg" alt="" />
+              </div>
+              <div class="book">
+                <img class="book-cover" src="/cover.jpg" alt="" />
+              </div>
+              <div class="book">
+                <img class="book-cover" src="/cover.jpg" alt="" />
+              </div>
+            </div>
+            <div class="book-row">
+              <div class="book">
+                <img class="book-cover" src="/cover.jpg" alt="" />
+              </div>
+              <div class="book">
+                <img class="book-cover" src="/cover.jpg" alt="" />
+              </div>
+              <div class="book">
+                <img class="book-cover" src="/cover.jpg" alt="" />
+              </div>
+              <div class="book">
+                <img class="book-cover" src="/cover.jpg" alt="" />
+              </div>
+            </div> -->
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="map-block">
+      <div class="map-wrapper">
+        <img src="/media/frame/mapPreview.png" alt="map" class="map-img">
+      </div>
+      <div id="map-scene">
+        <canvas id="map-canvas" style="display: none;"></canvas>
+      </div>
+    </div>
+
     <canvas id="media" style="display: none"></canvas>
     <canvas id="app"></canvas>
     <script src="/js/pdf.min.js"></script>

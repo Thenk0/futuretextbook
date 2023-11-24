@@ -9,7 +9,6 @@ export default class BookScene extends Scene {
     scene = null;
     cubes = [];
     constructor(canvasId, pdfUrl, page = 0) {
-        console.log(page);
         super(canvasId);
         this.canvasId = canvasId;
         this.pdfUrl = pdfUrl;
@@ -34,12 +33,29 @@ export default class BookScene extends Scene {
             this.camera,
             this.renderer.domElement
         );
-        this.book = new Book("/pages.pdf");
+        this.loadBook(page);
+    }
+
+    loadBook(page = 0) {
+        this.book = new Book(this.pdfUrl);
         this.book.loadBook(this.scene, page);
         this.controls.addEventListener(
             "mediastart",
             this.book.playMedia.bind(this.book)
         );
+        this.controls.addEventListener(
+            'pagedrop', 
+            this.stackPage.bind(this)
+        )
+    }
+
+    stackPage(event) {
+        const pageNumber = event.object.page;
+        const page = this.book._getPage(pageNumber);
+        page.group.position.x = -4;
+        page.group.position.y = 3;
+        page.group.scale.x = 0.5;
+        page.group.scale.y = 0.5;
     }
 
     activate() {
@@ -48,7 +64,9 @@ export default class BookScene extends Scene {
         document.getElementById("search-button").style.display = "block";
         this.renderer.domElement.style.display = "block";
         this.renderer.domElement.style.pointerEvents = "all";
-        window.keyboardScene.setOutline(this.book.outline)
+        window.keyboardScene.setOutline(this.book.outline);
+        this.controls.activate()
+        
     }
 
     deactivate() {
@@ -56,6 +74,7 @@ export default class BookScene extends Scene {
         this.renderer.domElement.style.display = "none";
         document.getElementById("search-button").style.display = "none";
         this.renderer.domElement.style.pointerEvents = "none";
+        this.controls.deactivate()
     }
 
     _resizeRendererToDisplaySize() {
@@ -68,13 +87,29 @@ export default class BookScene extends Scene {
         }
         return needResize;
     }
-    resetPages() {
+    
+    resetPages(foundPage) {
+        this.controls.resetPage();
         for (const page of this.book.pages) {
-            // Фикс инициализации
-            page.plane.material.map.needsUpdate = true;
+            for (const child of page.group.children) {
+                child.position.z = child.userData.zPosition
+                child.renderOrder = child.userData.renderOrder
+
+            }
+            page.group.position.x = 0;
+            page.group.position.y = 0;
+            page.group.scale.x = 1;
+            page.group.scale.y = 1;
+            if (page.pageNumber < foundPage) {
+                page.group.position.x = -4;
+                page.group.position.y = 3;
+                page.group.scale.x = 0.5;
+                page.group.scale.y = 0.5;
+            }
         }
     }
     render(time) {
+
         if (!this.active) return;
         time *= 0.001;
         time;
